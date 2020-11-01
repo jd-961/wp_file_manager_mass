@@ -2,7 +2,6 @@ import sys
 import urllib3
 import requests
 from multiprocessing import Pool
-from email.mime.text import MIMEText
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:79.0) Gecko/20100101 Firefox/79.0',
